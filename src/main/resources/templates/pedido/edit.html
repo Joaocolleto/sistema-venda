@@ -238,7 +238,7 @@
                                 <span class="badge bg-light text-dark border px-3 py-1" th:text="${item.quantidade}">1</span>
                             </td>
                             <td class="text-end py-3 text-muted" th:text="${#numbers.formatCurrency(item.precoUnitario)}">R$ 0,00</td>
-                            <td class="text-end py-3 fw-bold text-dark" th:text="${#numbers.formatCurrency(item.precoUnitario * item.quantidade)}">R$ 0,00</td>
+                            <td class="text-end py-3 fw-bold text-dark" th:text="${#numbers.formatCurrency(item.subTotal)}">R$ 0,00</td>
                             <td class="text-center py-3 pe-4" th:if="${pedido.status.name() == 'ATIVO'}">
                                 <form th:action="@{/pedidos/{pedidoId}/remover-item/{itemId}(pedidoId=${pedido.id}, itemId=${item.id})}" method="post" class="d-inline">
                                     <button type="submit" class="btn btn-sm btn-outline-danger" title="Remover item">

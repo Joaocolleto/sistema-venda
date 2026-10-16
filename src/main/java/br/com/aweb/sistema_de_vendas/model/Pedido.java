@@ -3,9 +3,11 @@ package br.com.aweb.sistema_de_vendas.model;
 import br.com.aweb.sistema_de_vendas.model.enums.StatusPedido;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
-import lombok.AllArgsConstructor;
-import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
@@ -14,14 +16,15 @@ import java.util.List;
 
 @Entity
 @Table(name = "pedidos")
-@AllArgsConstructor
+@Getter
+@Setter
+@ToString(exclude = "itens")
+@EqualsAndHashCode(of = "id")
 @NoArgsConstructor
-@Data
 public class Pedido {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
 
     @Column(nullable = false, name = "data_pedido")
     private LocalDateTime dataPedido = LocalDateTime.now();

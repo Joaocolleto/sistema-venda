@@ -2,20 +2,16 @@ package br.com.aweb.sistema_de_vendas.controller;
 
 import java.util.Map;
 
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.server.ResponseStatusException;
 import org.springframework.web.servlet.ModelAndView;
 
 import br.com.aweb.sistema_de_vendas.exception.EntidadeNaoEncontradaException;
-import br.com.aweb.sistema_de_vendas.exception.RegraNegocioException;
 import br.com.aweb.sistema_de_vendas.model.Pedido;
-import br.com.aweb.sistema_de_vendas.model.enums.StatusPedido;
 import br.com.aweb.sistema_de_vendas.service.ClienteService;
 import br.com.aweb.sistema_de_vendas.service.PedidoService;
 import br.com.aweb.sistema_de_vendas.service.ProdutoService;
@@ -55,7 +51,7 @@ public class PedidoController {
     @PostMapping("/novo")
     public String criarPedido(@RequestParam Long clienteId) {
         var optionalCliente = clienteService.buscarPorId(clienteId);
-        if(!optionalCliente.isPresent()) {
+        if (!optionalCliente.isPresent()) {
             throw new EntidadeNaoEncontradaException("Cliente não encontrado");
         }
 
@@ -66,8 +62,8 @@ public class PedidoController {
     // Formulário de edição de pedido
     @GetMapping("/edit/{id}")
     public ModelAndView editarPedidoForm(@PathVariable Long id) {
-        var optionalPedido =  pedidoService.buscarPorId(id);
-        if(!optionalPedido.isPresent()) {
+        var optionalPedido = pedidoService.buscarPorId(id);
+        if (!optionalPedido.isPresent()) {
             throw new EntidadeNaoEncontradaException("Pedido não encontrado");
         }
 
@@ -84,44 +80,30 @@ public class PedidoController {
     // Remover item do pedido
     @PostMapping("/{pedidoId}/remover-item/{itemId}")
     public String removerItem(@PathVariable Long pedidoId, @PathVariable Long itemId) {
-        try {
-            pedidoService.removerItem(pedidoId, itemId);
-            return "redirect:/pedidos/edit/" + pedidoId;
-        } catch(RegraNegocioException | EntidadeNaoEncontradaException e) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage());
-        }
+        pedidoService.removerItem(pedidoId, itemId);
+        return "redirect:/pedidos/edit/" + pedidoId;
     }
 
     // Adicionar item ao pedido
     @PostMapping("/{pedidoId}/adicionar-item")
     public String adicionarItem(@PathVariable Long pedidoId, @RequestParam Long produtoId, @RequestParam Integer quantidade) {
-       try {
-            pedidoService.adicionarItem(pedidoId, produtoId, quantidade);
-            return "redirect:/pedidos/edit/" + pedidoId;
-       } catch(RegraNegocioException | EntidadeNaoEncontradaException e) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage());
-
-       }
+        pedidoService.adicionarItem(pedidoId, produtoId, quantidade);
+        return "redirect:/pedidos/edit/" + pedidoId;
     }
 
     // Finalizar pedido
     @PostMapping("/{id}/finalizar")
-    public String finalizarPedido(@PathVariable  Long id) {
-        try {
-            pedidoService.finalizarPedido(id);
-            return "redirect:/pedidos";
-        } catch(RegraNegocioException | EntidadeNaoEncontradaException e) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage());
-        }
+    public String finalizarPedido(@PathVariable Long id) {
+        pedidoService.finalizarPedido(id);
+        return "redirect:/pedidos";
     }
-
 
     // Cancelar Pedido - Formulário de Confirmação
     @GetMapping("/cancelar/{id}")
     public ModelAndView cancelarPedidoForm(@PathVariable Long id) {
         var optionalPedido = pedidoService.buscarPorId(id);
-        if(!optionalPedido.isPresent()) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND);
+        if (!optionalPedido.isPresent()) {
+            throw new EntidadeNaoEncontradaException("Pedido não encontrado");
         }
         return new ModelAndView("pedido/cancelar", Map.of("pedido", optionalPedido.get()));
     }
@@ -129,11 +111,7 @@ public class PedidoController {
     // Cancelar Pedido - Ação
     @PostMapping("/cancelar/{id}")
     public String cancelarPedido(@PathVariable Long id) {
-        try {
-            pedidoService.cancelarPedido(id);
-            return "redirect:/pedidos";
-        } catch(RegraNegocioException | EntidadeNaoEncontradaException e) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage());
-        }
+        pedidoService.cancelarPedido(id);
+        return "redirect:/pedidos";
     }
 }

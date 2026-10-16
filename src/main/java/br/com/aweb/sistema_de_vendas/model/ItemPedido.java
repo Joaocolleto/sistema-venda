@@ -3,16 +3,22 @@ package br.com.aweb.sistema_de_vendas.model;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
-import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
 
 import java.math.BigDecimal;
 
 @Entity
 @Table(name = "itens_pedido")
+@Getter
+@Setter
+@ToString(exclude = "pedido")
+@EqualsAndHashCode(of = "id")
 @AllArgsConstructor
 @NoArgsConstructor
-@Data
 public class ItemPedido {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -39,5 +45,12 @@ public class ItemPedido {
         this.produto = produto;
         this.quantidade = quantidade;
         this.precoUnitario = produto.getPreco();
+    }
+
+    public BigDecimal getSubTotal() {
+        if (precoUnitario != null && quantidade != null) {
+            return precoUnitario.multiply(BigDecimal.valueOf(quantidade));
+        }
+        return BigDecimal.ZERO;
     }
 }

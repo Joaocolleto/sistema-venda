@@ -26,7 +26,7 @@ public class ClienteController {
         this.clienteService = clienteService;
     }
 
-    // Listar produtos
+    // Listar clientes
     @GetMapping
     public ModelAndView list() {
         return new ModelAndView("cliente/list", Map.of("clientes", clienteService.listarTodos()));
@@ -60,19 +60,19 @@ public class ClienteController {
 
     // Atualizar cliente
     @PostMapping("/edit/{id}")
-    public String edit(@Valid Cliente cliente, BindingResult result) {
+    public String edit(@PathVariable Long id, @Valid Cliente cliente, BindingResult result) {
         if (result.hasErrors()) {
             return "cliente/form";
         }
 
-        clienteService.atualizar(cliente.getId(), cliente);
+        clienteService.atualizar(id, cliente);
 
         return "redirect:/clientes";
     }
 
     // Excluir cliente
     @GetMapping("/delete/{id}")
-    public ModelAndView delete(@PathVariable Long id) {
+    public ModelAndView deleteForm(@PathVariable Long id) {
         var optionalCliente = clienteService.buscarPorId(id);
         if (optionalCliente.isPresent()) {
             return new ModelAndView("cliente/delete", Map.of("cliente", optionalCliente.get()));
@@ -81,8 +81,8 @@ public class ClienteController {
     }
 
     @PostMapping("/delete/{id}")
-    public String delete(Cliente cliente) {
-        clienteService.excluir(cliente.getId());
+    public String delete(@PathVariable Long id) {
+        clienteService.excluir(id);
         return "redirect:/clientes";
     }
 

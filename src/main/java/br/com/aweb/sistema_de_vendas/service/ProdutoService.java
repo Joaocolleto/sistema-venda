@@ -5,15 +5,13 @@ import java.util.Optional;
 
 import org.springframework.stereotype.Service;
 
+import br.com.aweb.sistema_de_vendas.exception.EntidadeNaoEncontradaException;
 import br.com.aweb.sistema_de_vendas.model.Produto;
 import br.com.aweb.sistema_de_vendas.repository.ProdutoRepository;
 import jakarta.transaction.Transactional;
 
 @Service
 public class ProdutoService {
-
-    // @Autowired
-    // private ProdutoRepository produtoRepository;
 
     private final ProdutoRepository produtoRepository;
 
@@ -40,8 +38,9 @@ public class ProdutoService {
     @Transactional
     public Produto atualizar(Long id, Produto produtoAtualizado) {
         var optionalProduto = buscarPorId(id);
-        if (!optionalProduto.isPresent())
-            throw new IllegalArgumentException("Produto não encontrado.");
+        if (!optionalProduto.isPresent()) {
+            throw new EntidadeNaoEncontradaException("Produto não encontrado.");
+        }
 
         var produtoExistente = optionalProduto.get();
 
@@ -50,19 +49,17 @@ public class ProdutoService {
         produtoExistente.setPreco(produtoAtualizado.getPreco());
         produtoExistente.setQuantidadeEmEstoque(produtoAtualizado.getQuantidadeEmEstoque());
 
-        var produtoSalvo = produtoRepository.save(produtoExistente);
-        return produtoSalvo;
-
+        return produtoRepository.save(produtoExistente);
     }
 
     // DELETE
     @Transactional
     public void excluir(Long id) {
         var optionalProduto = buscarPorId(id);
-        if (!optionalProduto.isPresent())
-            throw new IllegalArgumentException("Produto não encontrado.");
+        if (!optionalProduto.isPresent()) {
+            throw new EntidadeNaoEncontradaException("Produto não encontrado.");
+        }
 
         produtoRepository.deleteById(id);
     }
-
 }

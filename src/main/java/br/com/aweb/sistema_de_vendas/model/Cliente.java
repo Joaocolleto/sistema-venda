@@ -15,16 +15,18 @@ import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Email;
-import jakarta.validation.constraints.NotNull;
-import lombok.AllArgsConstructor;
-import lombok.Data;
+import jakarta.validation.constraints.NotBlank;
 import lombok.EqualsAndHashCode;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
 
 @Entity
 @Table(name = "clientes")
-@Data
-@AllArgsConstructor
+@Getter
+@Setter
+@ToString(exclude = "pedidos")
 @NoArgsConstructor
 @EqualsAndHashCode(of = "id")
 public class Cliente {
@@ -32,21 +34,21 @@ public class Cliente {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @NotNull(message = "O nome é obrigatório")
+    @NotBlank(message = "O nome é obrigatório")
     @Column(nullable = false, length = 100)
     private String nomeCompleto;
 
-    @NotNull(message = "O email é obrigatório")
-    @Column(nullable = false)
-    @Email
+    @NotBlank(message = "O email é obrigatório")
+    @Email(message = "Email inválido")
+    @Column(nullable = false, unique = true)
     private String email;
 
-    @NotNull(message = "O cpf é obrigatório")
-    @Column(nullable = false)
-    @CPF 
+    @NotBlank(message = "O cpf é obrigatório")
+    @CPF(message = "CPF inválido")
+    @Column(nullable = false, unique = true)
     private String cpf;
 
-    @NotNull(message = "O telefone é obrigatório")
+    @NotBlank(message = "O telefone é obrigatório")
     @Column(nullable = false, length = 20)
     private String telefone;
 

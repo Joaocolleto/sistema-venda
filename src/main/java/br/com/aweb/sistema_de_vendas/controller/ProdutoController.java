@@ -60,19 +60,19 @@ public class ProdutoController {
 
     // Atualizar produto
     @PostMapping("/edit/{id}")
-    public String edit(@Valid Produto produto, BindingResult result) {
+    public String edit(@PathVariable Long id, @Valid Produto produto, BindingResult result) {
         if (result.hasErrors()) {
             return "produto/form";
         }
 
-        produtoService.atualizar(produto.getId(), produto);
+        produtoService.atualizar(id, produto);
 
         return "redirect:/produtos";
     }
 
     // Excluir produto
     @GetMapping("/delete/{id}")
-    public ModelAndView delete(@PathVariable Long id) {
+    public ModelAndView deleteForm(@PathVariable Long id) {
         var optionalProduto = produtoService.buscarPorId(id);
         if (optionalProduto.isPresent()) {
             return new ModelAndView("produto/delete", Map.of("produto", optionalProduto.get()));
@@ -81,10 +81,9 @@ public class ProdutoController {
     }
 
     @PostMapping("/delete/{id}")
-    public String delete(Produto produto) {
-        produtoService.excluir(produto.getId());
+    public String delete(@PathVariable Long id) {
+        produtoService.excluir(id);
         return "redirect:/produtos";
     }
-
 
 }

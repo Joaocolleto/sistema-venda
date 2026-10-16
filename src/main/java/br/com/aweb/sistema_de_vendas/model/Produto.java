@@ -8,6 +8,7 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
+import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
 import jakarta.validation.constraints.PositiveOrZero;
@@ -27,20 +28,21 @@ public class Produto {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @NotNull(message = "Nome é obrigatório")
+    @NotBlank(message = "Nome é obrigatório")
     @Column(nullable = false, length = 100)
     private String nome;
 
-    @NotNull(message = "Descrição é obrigatório")
+    @NotBlank(message = "Descrição é obrigatória")
     @Column(nullable = false, length = 255)
     private String descricao;
 
     @NotNull(message = "Preço é obrigatório")
-    @Column(nullable = false)
     @Positive(message = "O valor deve ser maior que zero")
+    @Column(nullable = false)
     private BigDecimal preco;
 
-    @NotNull(message = "Quantidade é obrigatório")
-    @PositiveOrZero(message = "O valor deve ser maior ou igual a zero")
+    @NotNull(message = "Quantidade é obrigatória")
+    @PositiveOrZero(message = "A quantidade deve ser maior ou igual a zero")
+    @Column(nullable = false)
     private Integer quantidadeEmEstoque;
 }
